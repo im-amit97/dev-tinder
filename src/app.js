@@ -1,38 +1,21 @@
 const express = require('express');
+const { adminAuth, userAuth } = require('./middlewares/auth');
 
 const app = express(); //instance of express
 
-app.get('/user', (req, res) => {
-    res.send({
-        'firstname': 'John',
-        'lastname': 'Sena'
-    })
+app.use('/admin', adminAuth);
+
+app.get('/admin/all', (req, res) => {
+    res.send('All Users');
 });
 
-app.patch('/user', (req, res) => {
-    res.send({
-        responseCode: 200,
-        response: 'User updated Successfully'
-    })
+app.delete('/admin/user', (req, res) => {
+    res.send('Deleted');
 });
 
-app.post('/user', (req, res) => {
-    res.send({
-        responseCode: 200,
-        response: 'User Created Successfully'
-    })
-});
-
-app.delete('user', (req, res) => {
-    res.send({
-        responseCode: 200,
-        response: 'User Deleted Successfully'
-    })
+app.get('/user', userAuth, (req, res) => {
+    res.send('Fetched All User')
 })
-
-app.use("/hello", (req, res) => {
-    res.send('This is Hello Api')
-});
 
 app.listen(8000, () => {
     console.log('Node server started on port 8000');
