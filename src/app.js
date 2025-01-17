@@ -1,22 +1,34 @@
-const express = require('express');
-const { adminAuth, userAuth } = require('./middlewares/auth');
+const express = require("express");
+const connectDB = require("./config/database");
+const User = require("./models/user");
 
 const app = express(); //instance of express
 
-app.use('/admin', adminAuth);
+app.post("/signin", async (req, res) => {
+  const payload = {
+    firstName: "John",
+    lastName: "Sena",
+    email: "john.s@gmail.com",
+    password: "987678",
+    age: 30,
+    gender: "M",
+  };
 
-app.get('/admin/all', (req, res) => {
-    res.send('All Users');
+  const user = new User(payload);
+
+  try {
+    await user.save();
+    res.send("User Created Successfully");
+  } catch (err) {
+    res.send("Failed to Sign In " + err);
+  }
+  await user.save();
+  res.send("User Created Successfully");
 });
 
-app.delete('/admin/user', (req, res) => {
-    res.send('Deleted');
+connectDB().then(() => {
+  console.log("DB Connection estabilished succsessfully");
+  app.listen(8000, () => {
+    console.log("Node server started on port 8000");
+  });
 });
-
-app.get('/user', userAuth, (req, res) => {
-    res.send('Fetched All User')
-})
-
-app.listen(8000, () => {
-    console.log('Node server started on port 8000');
-})

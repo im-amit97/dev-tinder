@@ -1,9 +1,16 @@
-## Dev Tinder BE ##
+# Dev Tinder BE #
 
-# Express
+## Express
     - app.use('/path', (req, res, next) => {})
     - app.get()
 
-# Routers & Middlewares
+## Routers & Middlewares
     - custom middlewares
     - route handlers
+
+## Mongoose
+    - mongoose.connect(clusterUrl)
+    - Create Schema
+    - Create Model
+    - Call the modal instace
+    - modal.save() to DB
