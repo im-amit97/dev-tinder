@@ -13,10 +13,37 @@ app.post("/signin", async (req, res) => {
     await user.save();
     res.send("User Created Successfully");
   } catch (err) {
-    res.send("Failed to Sign In " + err);
+    res.status(500).send("Failed to Sign In " + err);
   }
-  await user.save();
-  res.send("User Created Successfully");
+});
+
+app.get("/user", async(req, res) => {
+    try {
+        const userEmailId = req.body.emailId;
+        const user = await User.findOne({email: userEmailId });
+        if (!user) {
+            res.status(404).send('User Not Found');
+        } else {
+            res.send(user);
+        }
+    } catch(err) {
+        res.status(500).send('Internal Server Error');
+    }
+
+});
+
+app.get("/feed", async(req, res) => {
+    try {
+        const users = await User.find({});
+        if (users.length === 0) {
+            res.status(404).send('Users Not Found');
+        } else {
+            res.send(users);
+        }
+    } catch(err) {
+        res.status(500).send('Internal Server Error');
+    }
+
 });
 
 connectDB().then(() => {
