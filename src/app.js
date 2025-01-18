@@ -58,10 +58,37 @@ app.delete("/user", async (req, res) => {
   }
 });
 
-app.patch("/user", async (req, res) => {
+app.patch("/user/:userId", async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req?.body?.userId, req?.body, {
-        runValidators: true
+    const userId = req?.params?.userId;
+    const data = req?.body;
+    const ALLOWED_LIST = [
+      "firstName",
+      "lastName",
+      "password",
+      "age",
+      "gender",
+      "skills",
+    ];
+
+    if (!userId) {
+      throw new Error("UserId is not provided");
+    }
+
+    const isAllowed = Object.keys(data).every((key) =>
+      ALLOWED_LIST.includes(key)
+    );
+
+    if (!isAllowed) {
+      throw new Error("Enter only allowed keys");
+    }
+
+    if (data?.skills?.length > 10) {
+      throw new Error("Enter max 10 Skills");
+    }
+
+    const user = await User.findByIdAndUpdate(req?.params?.userId, data, {
+      runValidators: true,
     });
     if (!user) {
       res.status(404).send("No User Found");
@@ -69,7 +96,7 @@ app.patch("/user", async (req, res) => {
       res.send("User Updated Successfully");
     }
   } catch (err) {
-    res.status(500).send("Something Went Wrong " + err);
+    res.status(400).send("Update Failed: " + err);
   }
 });
 

@@ -15,3 +15,4 @@
     - Call the modal instace
     - modal.save() to DB
     - validations on schema (required, trim, maxLength, min, custom validate function, etc)
+    - API level validation before db calls (Data Sanitization)
