@@ -16,4 +16,7 @@
     - modal.save() to DB
     - validations on schema (required, trim, maxLength, min, custom validate function, etc)
     - API level validation before db calls (Data Sanitization)
+
+## Validation & Encryption
     - installed validators package (validate email, urls, passwords)
+    - bcrypt for encryption of password
