@@ -14,3 +14,4 @@
     - Create Model
     - Call the modal instace
     - modal.save() to DB
+    - validations on schema (required, trim, maxLength, min, custom validate function, etc)
