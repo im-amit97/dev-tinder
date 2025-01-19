@@ -1,22 +1,30 @@
-const adminAuth = (req, res, next) => {
-  const isAdminToken = "xyzwer";
-  if (isAdminToken === "xyz") {
-    next();
-  } else {
-    res.sendStatus("401").send("Unauthorised Admin User");
-  }
-};
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+require('dotenv').config();
 
-const userAuth = (req, res, next) => {
-  const isUserToken = "xyz";
-  if (isUserToken === "xyz") {
+const userAuth = async (req, res, next) => {
+  try {
+    const { token } = req.cookies;
+
+    if (!token) {
+      throw new Error("Token is not available");
+    }
+
+    const { _id } = jwt.verify(token, process.env.SECRET_KEY);
+
+    const user = await User.findById(_id);
+
+    if (!user) {
+      throw new Error("Unauthorised Access");
+    }
+
+    req.user = user;
     next();
-  } else {
-    res.sendStatus("401").send("Unauthorised User");
+  } catch (err) {
+    res.status("404").send("ERROR " + err);
   }
 };
 
 module.exports = {
-  adminAuth,
   userAuth,
 };
