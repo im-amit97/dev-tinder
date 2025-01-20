@@ -52,6 +52,18 @@ const userSchema = mongoose.Schema(
         }
       },
     },
+    photoUrl: {
+      type: String,
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("Photo URL is not valid");
+        }
+      },
+    },
+    about: {
+      type: String,
+      maxLength: 200
+    },
     skills: {
       type: [String],
     },

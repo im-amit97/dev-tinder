@@ -1,8 +1,8 @@
 require("dotenv").config();
 const express = require("express");
-const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const { validateSignIn, validateLogIn } = require("../utils/validations");
+const getHash = require('../utils/hash');
 
 const authRouter = express.Router();
 
@@ -14,11 +14,7 @@ authRouter.post("/signin", async (req, res) => {
     const { firstName, lastName, email, password } = req?.body;
 
     // decrypt the password using bcrypt
-    const passwordHash = await bcrypt.hash(
-      password,
-      parseInt(process.env.SALT_ROUNDS)
-    );
-    console.log(passwordHash);
+    const passwordHash = await getHash(password);
 
     const user = new User({
       firstName,
@@ -31,7 +27,6 @@ authRouter.post("/signin", async (req, res) => {
 
     res.send("User Created Successfully");
   } catch (err) {
-    console.log("ERROR : " + err);
     res.status(500).send("ERROR: " + err);
   }
 });
@@ -62,6 +57,11 @@ authRouter.post("/login", async (req, res) => {
   } catch (err) {
     res.status(400).send("ERROR: " + err);
   }
+});
+
+authRouter.post("/logout", (req, res) => {
+  res.cookie('token', null, { expires: new Date(Date.now()) });
+  res.send("Logout Successfully...!");
 });
 
 module.exports = authRouter;
