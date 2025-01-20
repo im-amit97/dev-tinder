@@ -25,3 +25,6 @@
 ## Authentication (JWT)
     Cookie : install cookie-parser to parse/read the cookies (provided by express)
     jsonwebtoken: sign and verify the token with secret.
+
+## Express Router
+    express.Router();
