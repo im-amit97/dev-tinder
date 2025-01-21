@@ -4,10 +4,11 @@ const cookieParser = require("cookie-parser");
 const app = express(); //instance of express
 const authRouter = require("./router/auth");
 const profileRouter = require("./router/profile");
+const requestRouter = require("./router/request");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/", authRouter, profileRouter);
+app.use("/", authRouter, profileRouter, requestRouter);
 
 connectDB().then(() => {
   console.log("DB Connection estabilished succsessfully");

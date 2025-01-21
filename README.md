@@ -17,6 +17,8 @@
     - validations on schema (required, trim, maxLength, min, custom validate function, etc)
     - API level validation before db calls (Data Sanitization)
     - Used mongoose.methods.methodName = function () {} for utils
+    - index, compound index
+    - schema.pre('save', function () {});
 
 ## Validation & Encryption
     - installed validators package (validate email, urls, passwords)
