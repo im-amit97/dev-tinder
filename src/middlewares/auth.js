@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-require('dotenv').config();
+require("dotenv").config();
 
 const userAuth = async (req, res, next) => {
   try {
@@ -21,7 +21,9 @@ const userAuth = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    res.status("404").send("ERROR " + err);
+    res.status(404).json({
+      message: err?.message,
+    });
   }
 };
 

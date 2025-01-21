@@ -19,6 +19,7 @@
     - Used mongoose.methods.methodName = function () {} for utils
     - index, compound index
     - schema.pre('save', function () {});
+    - ref and populate other collection data
 
 ## Validation & Encryption
     - installed validators package (validate email, urls, passwords)

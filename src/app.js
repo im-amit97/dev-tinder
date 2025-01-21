@@ -5,10 +5,11 @@ const app = express(); //instance of express
 const authRouter = require("./router/auth");
 const profileRouter = require("./router/profile");
 const requestRouter = require("./router/request");
+const userRouter = require("./router/user");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/", authRouter, profileRouter, requestRouter);
+app.use("/", authRouter, profileRouter, requestRouter, userRouter);
 
 connectDB().then(() => {
   console.log("DB Connection estabilished succsessfully");

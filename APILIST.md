@@ -18,6 +18,6 @@
     accepted, rejected
 
 ## userConncetion
+- GET user/requests/received
 - GET user/connection
-- GET user/requests
 - GET user/feed
