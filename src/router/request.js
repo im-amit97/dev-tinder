@@ -37,8 +37,8 @@ requestRouter.post(
       const isAlreadyConnected = await ConnectionRequest.findOne({
         $or: [
           { fromUserId, toUserId },
-          { fromUserId: toUserId, toUserId: fromUserId }
-        ]
+          { fromUserId: toUserId, toUserId: fromUserId },
+        ],
       });
 
       if (isAlreadyConnected) {
@@ -61,8 +61,49 @@ requestRouter.post(
       });
     } catch (err) {
       res.status(400).send({
-        message: err?.message
+        message: err?.message,
       });
+    }
+  }
+);
+
+requestRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const loggedInUser = req?.user;
+      const { status, requestId } = req?.params;
+
+      const ALLOWED_STATUS = ["accepted", "rejected"];
+      if (!ALLOWED_STATUS.includes(status)) {
+        return res.status(400).json({
+          message: "Status not valid",
+        });
+      }
+
+      const connectionRequest = await ConnectionRequest.findOne({
+        fromUserId: requestId,
+        toUserId: loggedInUser?._id,
+        status: "interested",
+      });
+
+      if (!connectionRequest) {
+        return res.status(404).json({
+          message: "No Connection Request Found",
+        });
+      }
+
+      connectionRequest.status = status;
+
+      const data = await connectionRequest.save(loggedInUser);
+
+      res.json({
+        message: `${loggedInUser?.firstName} ${status} the request`,
+        data,
+      });
+    } catch (err) {
+      res.status(400).json({ message: err?.message });
     }
   }
 );
