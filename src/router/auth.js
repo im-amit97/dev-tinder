@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const User = require("../models/user");
 const { validateSignIn, validateLogIn } = require("../utils/validations");
-const getHash = require('../utils/hash');
+const getHash = require("../utils/hash");
 
 const authRouter = express.Router();
 
@@ -25,9 +25,9 @@ authRouter.post("/signin", async (req, res) => {
 
     await user.save();
 
-    res.send("User Created Successfully");
+    res.json({ message: "User Created Successfully" });
   } catch (err) {
-    res.status(500).send("ERROR: " + err);
+    res.status(400).json({ error: err?.message });
   }
 });
 
@@ -50,18 +50,18 @@ authRouter.post("/login", async (req, res) => {
 
       // set the token to cookies
       res.cookie("token", token);
-      res.send("Login Successful..!");
+      res.json({ message: "Login Successful..!" });
     } else {
       throw new Error("Invalid Credentials");
     }
   } catch (err) {
-    res.status(400).send("ERROR: " + err);
+    res.status(400).json({ error: err?.message });
   }
 });
 
 authRouter.post("/logout", (req, res) => {
-  res.cookie('token', null, { expires: new Date(Date.now()) });
-  res.send("Logout Successfully...!");
+  res.cookie("token", null, { expires: new Date(Date.now()) });
+  res.json({ message: "Logout Successfully...!" });
 });
 
 module.exports = authRouter;

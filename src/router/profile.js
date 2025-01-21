@@ -13,9 +13,12 @@ const profileRouter = express.Router();
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req?.user;
-    res.send(user);
+    res.json({
+      message: "Data fetch Successfully",
+      data: user,
+    });
   } catch (err) {
-    res.status(400).send("ERROR: " + err);
+    res.status(400).json({ error: err?.message });
   }
 });
 
@@ -45,6 +48,7 @@ profileRouter.patch("/profile/password", userAuth, async (req, res) => {
     validateEditPasswordRequest(req);
 
     const { _id } = req?.user;
+    //TODO: handle Current Password
     const { currentPassword, password } = req?.body;
 
     const passwordHash = await getHash(password);

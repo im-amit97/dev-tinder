@@ -1,18 +1,12 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
+const User = require("../models/user");
+const constants = require("../utils/constants");
 
 const userRouter = express.Router();
 
-const USER_SEND_PARAM = [
-  "firstName",
-  "lastName",
-  "age",
-  "gender",
-  "photoUrl",
-  "about",
-  "skills",
-];
+const USER_SEND_PARAM = constants.userReturnParam;
 
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   try {
@@ -29,7 +23,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({
-      message: err?.message,
+      error: err?.message,
     });
   }
 });
@@ -60,7 +54,48 @@ userRouter.get("/user/connection", userAuth, async (req, res) => {
     });
   } catch (err) {
     res.status(404).json({
-      message: err?.message,
+      error: err?.message,
+    });
+  }
+});
+
+userRouter.get("/user/feed", userAuth, async (req, res) => {
+  try {
+    const page = req?.query?.page || 1;
+    let limit = parseInt(req?.query?.limit) || 0;
+    limit = limit < 50 ? limit : 50;
+    const skip = (page - 1) * limit;
+
+    const { _id } = req?.user;
+
+    const connectionRequest = await ConnectionRequest.find({
+      $or: [{ fromUserId: _id }, { toUserId: _id }],
+    }).select(["fromUserId", "toUserId"]);
+
+    const hideConnectedUser = new Set();
+
+    connectionRequest.forEach((request) => {
+      hideConnectedUser.add(request?.fromUserId?._id?.toString());
+      hideConnectedUser.add(request?.toUserId?._id?.toString());
+    });
+
+    const users = await User.find({
+      $and: [
+        { _id: { $nin: Array.from(hideConnectedUser) } },
+        { _id: { $ne: _id } },
+      ],
+    })
+      .select(USER_SEND_PARAM)
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      message: "Data fetch Successfully",
+      data: users,
+    });
+  } catch (err) {
+    res.status(400).json({
+      error: err?.message,
     });
   }
 });

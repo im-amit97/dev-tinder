@@ -16,23 +16,18 @@ requestRouter.post(
       const toUserId = req?.params?.userId;
       const fromUserId = req?.user?._id;
 
-      // check toUserId === fromUserId
-
       if (!STATUSES.includes(status)) {
         return res.status(400).json({
-          message: "Status is not valid",
+          error: "Status is not valid",
         });
       }
 
-      // check request user in db
       const toUser = await User.findById(toUserId);
       if (!toUser) {
         return res.status(400).json({
-          message: "Requested User is not Found!",
+          error: "Requested User is not Found!",
         });
       }
-
-      // check fromUser && toUser in db;
 
       const isAlreadyConnected = await ConnectionRequest.findOne({
         $or: [
@@ -43,7 +38,7 @@ requestRouter.post(
 
       if (isAlreadyConnected) {
         return res.status(400).json({
-          message: "Users are already connceted",
+          error: "Users are already connceted",
         });
       }
 
@@ -61,7 +56,7 @@ requestRouter.post(
       });
     } catch (err) {
       res.status(400).send({
-        message: err?.message,
+        error: err?.message,
       });
     }
   }
@@ -78,7 +73,7 @@ requestRouter.post(
       const ALLOWED_STATUS = ["accepted", "rejected"];
       if (!ALLOWED_STATUS.includes(status)) {
         return res.status(400).json({
-          message: "Status not valid",
+          error: "Status not valid",
         });
       }
 
@@ -90,7 +85,7 @@ requestRouter.post(
 
       if (!connectionRequest) {
         return res.status(404).json({
-          message: "No Connection Request Found",
+          error: "No Connection Request Found",
         });
       }
 
@@ -103,7 +98,7 @@ requestRouter.post(
         data,
       });
     } catch (err) {
-      res.status(400).json({ message: err?.message });
+      res.status(400).json({ error: err?.message });
     }
   }
 );

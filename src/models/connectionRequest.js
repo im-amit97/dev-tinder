@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const constants = require("../utils/constants");
 
 const connectionRequestSchema = new mongoose.Schema(
   {
@@ -15,7 +16,7 @@ const connectionRequestSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ["interested", "ignored", "accepted", "rejected"],
+        values: constants.statusList,
         message: `{VALUE} status is not supported`,
       },
     },

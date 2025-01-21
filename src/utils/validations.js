@@ -1,4 +1,5 @@
 const validator = require("validator");
+const constants = require("./constants");
 
 const validateSignIn = (req) => {
   const { firstName, email, password } = req?.body;
@@ -29,35 +30,27 @@ const validateLogIn = (req) => {
 };
 
 const validateEditProfileData = (req) => {
-  const EDIT_FIELDS = [
-    "firstName",
-    "lastName",
-    "age",
-    "gender",
-    "photoUrl",
-    "about",
-    "skills",
-  ];
+  const EDIT_FIELDS = constants.userEditFields;
 
   if (!Object.keys(req?.body).every((key) => EDIT_FIELDS.includes(key))) {
-    throw new Error('Request is not valid');
+    throw new Error("Request is not valid");
   }
 };
 
 const validateEditPasswordRequest = (req) => {
   const { currentPassword, password, rePassword } = req?.body;
   if (!currentPassword || !password || !rePassword) {
-    throw new Error('Request is not valid');
+    throw new Error("Request is not valid");
   }
 
   if (password !== rePassword) {
-    throw new Error('New passwords are not matched');
+    throw new Error("New passwords are not matched");
   }
 
   if (!validator.isStrongPassword(password)) {
-    throw new Error('Please Enter Strong Password');
+    throw new Error("Please Enter Strong Password");
   }
-}
+};
 
 module.exports = {
   validateSignIn,

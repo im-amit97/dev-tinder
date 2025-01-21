@@ -20,6 +20,7 @@
     - index, compound index
     - schema.pre('save', function () {});
     - ref and populate other collection data
+    - skip().limit()
 
 ## Validation & Encryption
     - installed validators package (validate email, urls, passwords)
