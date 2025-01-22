@@ -32,3 +32,7 @@
 
 ## Express Router
     express.Router();
+
+## Cors
+    Install cors to allow http
+    cors({ origin: 'http://...', credential: true})
