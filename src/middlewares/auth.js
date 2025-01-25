@@ -22,7 +22,7 @@ const userAuth = async (req, res, next) => {
     next();
   } catch (err) {
     res.status(404).json({
-      message: err?.message,
+      error: err?.message,
     });
   }
 };
